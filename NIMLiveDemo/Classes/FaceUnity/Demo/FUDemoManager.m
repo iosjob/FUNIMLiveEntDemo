@@ -16,6 +16,7 @@
 
 #import "FUSegmentBar.h"
 #import "FUAlertManager.h"
+#import "FUTipHUD.h"
 
 #import "authpack.h"
 
@@ -46,6 +47,7 @@
 @property (nonatomic, weak) UIView *targetView;
 @property (nonatomic, assign) CGFloat demoOriginY;
 
+
 @end
 
 @implementation FUDemoManager
@@ -64,6 +66,9 @@ static dispatch_once_t onceToken;
     self = [super init];
     if (self) {
         self.shouldRender = YES;
+        self.flipx = YES;
+        self.stickerH = YES;
+        self.isRender = YES;
     }
     return self;
 }
@@ -74,6 +79,19 @@ static dispatch_once_t onceToken;
     setupConfig.authPack = FUAuthPackMake(g_auth_package, sizeof(g_auth_package));
     // 初始化 FURenderKit
     [FURenderKit setupWithSetupConfig:setupConfig];
+    
+    FUDevicePerformanceLevel level = [FURenderKit devicePerformanceLevel];
+    FUFaceAlgorithmConfig config = FUFaceAlgorithmConfigEnableAll;
+    if (level < FUDevicePerformanceLevelHigh) {
+        // 关闭所有效果
+        config = FUFaceAlgorithmConfigDisableAll;
+    } else if (level < FUDevicePerformanceLevelVeryHigh) {
+        // 关闭皮肤分割、祛斑痘和 ARMeshV2 人种分类
+        config = FUFaceAlgorithmConfigDisableSkinSegAndDelSpot | FUFaceAlgorithmConfigDisableARMeshV2 | FUFaceAlgorithmConfigDisableRACE;
+    } else if (level < FUDevicePerformanceLevelExcellent) {
+        config = FUFaceAlgorithmConfigDisableSkinSeg;
+    }
+    [FUAIKit setFaceAlgorithmConfig:config];
     
     // 加载人脸 AI 模型
     NSString *faceAIPath = [[NSBundle mainBundle] pathForResource:@"ai_face_processor" ofType:@"bundle"];
@@ -86,10 +104,18 @@ static dispatch_once_t onceToken;
     [FUAIKit shareKit].maxTrackFaces = 4;
     
     // 设置人脸算法质量
-    [FUAIKit shareKit].faceProcessorFaceLandmarkQuality = [FURenderKit devicePerformanceLevel] >= FUDevicePerformanceLevelHigh ? FUFaceProcessorFaceLandmarkQualityHigh : FUFaceProcessorFaceLandmarkQualityMedium;
+    [FUAIKit shareKit].faceProcessorFaceLandmarkQuality = level >= FUDevicePerformanceLevelHigh ? FUFaceProcessorFaceLandmarkQualityHigh : FUFaceProcessorFaceLandmarkQualityMedium;
+    
+    // 设置是遮挡是否使用高精度模型
+    [FUAIKit shareKit].faceProcessorSetFaceLandmarkHpOccu = NO;
     
     // 设置小脸检测是否打开
-    [FUAIKit shareKit].faceProcessorDetectSmallFace = [FURenderKit devicePerformanceLevel] >= FUDevicePerformanceLevelHigh;
+    [FUAIKit shareKit].faceProcessorDetectSmallFace = level >= FUDevicePerformanceLevelHigh;
+    
+    if (level <= FUDevicePerformanceLevelLow) {
+        // 打开动态质量
+        [FURenderKit setDynamicQualityControlEnabled:YES];
+    }
     
     // 性能测试初始化
     [[FUTestRecorder shareRecorder] setupRecord];
@@ -217,6 +243,15 @@ static dispatch_once_t onceToken;
     }
 }
 
+- (BOOL)segmentBar:(FUSegmentBar *)segmentBar shouldSelectItemAtIndex:(NSInteger)index {
+    if (index == FUModuleTypeMakeup && [FURenderKit devicePerformanceLevel] < FUDevicePerformanceLevelLow) {
+        // 限制美妆功能
+        [FUTipHUD showTips:[NSString stringWithFormat:FULocalizedString(@"该功能只支持在高端机上使用"), @"美妆"] dismissWithDelay:1];
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - Getters
 - (FUSegmentBar *)bottomBar {
     if (!_bottomBar) {
@@ -314,17 +349,6 @@ static dispatch_once_t onceToken;
     return _trackTipLabel;
 }
 
-//- (BOOL)shouldRender {
-//    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-//    __block BOOL should = YES;
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        should = self.renderSwitch.isOn;
-//        dispatch_semaphore_signal(semaphore);
-//    });
-//    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-//    return should;
-//}
-
 #pragma mark - Class methods
 
 + (void)destory {
@@ -374,7 +398,9 @@ static dispatch_once_t onceToken;
         [beauty addPropertyMode:FUBeautyPropertyMode3 forKey:FUModeKeyEyeEnlarging];
         [beauty addPropertyMode:FUBeautyPropertyMode3 forKey:FUModeKeyIntensityMouth];
     }
+    // 打开美型功能抗锯齿优化
     [FURenderKit shareRenderKit].beauty = beauty;
+    beauty.enableWarpAntiAlias = YES;
 }
 
 /// 加载默认美体

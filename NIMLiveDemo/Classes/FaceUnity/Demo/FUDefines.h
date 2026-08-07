@@ -34,7 +34,11 @@ typedef NS_ENUM(NSUInteger, FUBeautySkin) {
     FUBeautySkinEyeBright,
     FUBeautySkinToothWhiten,
     FUBeautySkinRemovePouchStrength,
-    FUBeautySkinRemoveNasolabialFoldsStrength
+    FUBeautySkinRemoveNasolabialFoldsStrength,
+    FUBeautySkinAntiAcneSpot,
+    FUBeautySkinClarity,
+    FUBeautySkinBodyBlurLevel,      // 全身磨皮，SDK key: body_blur_level，范围 0.0-6.0，仅 4 级机型
+    FUBeautySkinFacialPlump         // 面部丰盈，SDK key: facial_plump，范围 0.0-1.0，高端机
 };
 
 typedef NS_ENUM(NSUInteger, FUBeautyShape) {
@@ -62,20 +66,28 @@ typedef NS_ENUM(NSUInteger, FUBeautyShape) {
     FUBeautyShapeSmile,
     FUBeautyShapeBrowHeight,
     FUBeautyShapeBrowSpace,
-    FUBeautyShapeBrowThick
+    FUBeautyShapeBrowThick,
+    FUBeautyShapeEyePupil         // 瞳孔大小，SDK key: intensity_eye_pupil，范围 0.0-1.0，双向滑杆，全机型
 };
 
 /// 美体模块子功能
 typedef NS_ENUM(NSUInteger, FUBeautyBodyItem) {
-    FUBeautyBodyItemSlim,                   // 瘦身
-    FUBeautyBodyItemLongLeg,                // 长腿
-    FUBeautyBodyItemThinWaist,              // 细腰
-    FUBeautyBodyItemBeautyShoulder,         // 美肩
-    FUBeautyBodyItemBeautyButtock,          // 美臀
-    FUBeautyBodyItemSmallHead,              // 小头
-    FUBeautyBodyItemThinLeg,                // 瘦腿
+    FUBeautyBodyItemSlim,  // 瘦身,
+    FUBeautyBodyItemLongLeg, // 长腿,
+    FUBeautyBodyItemThinWaist, // 细腰,
+    FUBeautyBodyItemBeautyShoulder, // 美肩,
+    FUBeautyBodyItemBeautyButtock, // 美臀,
+    FUBeautyBodyItemSmallHead, // 小头,
+    FUBeautyBodyItemThinLeg, // 瘦腿,
+    FUBeautyBodyItemBreast, // 丰胸
 };
 
+
+#pragma mark - 持久化 Key
+
+static NSString * const FUPersistentBeautySkinKey = @"FUPersistentBeautySkin_v9.0.0";
+static NSString * const FUPersistentBeautySkinSegmentationKey = @"FUPersistentBeautySkinSegmentation_v9.0.0";
+static NSString * const FUPersistentBeautyShapeKey = @"FUPersistentBeautyShape_v9.0.0";
 
 #pragma mark - 常量
 
@@ -87,9 +99,14 @@ static CGFloat const FUFunctionSliderHeight = 30.f;
 
 #pragma mark - 内联函数
 
-static inline CGFloat FUSafaAreaBottomInsets() {
+static inline CGFloat FUSafaAreaBottomInsets(void) {
     if (@available(iOS 11.0, *)) {
-        return [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+        if (@available(iOS 11.0, *)) {
+            if ([UIApplication sharedApplication].delegate.window) {
+                return [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+            }
+            return [UIApplication sharedApplication].windows.firstObject.safeAreaInsets.bottom;
+        }
     }
     return 0;
 }

@@ -10,6 +10,9 @@
 #import "FUSlider.h"
 #import "FUAlertManager.h"
 #import "FUTipHUD.h"
+#import "FUDefines.h"
+
+
 
 static NSString * const kFUBeautyShapeCellIdentifier = @"FUBeautyShapeCell";
 
@@ -133,12 +136,9 @@ static NSString * const kFUBeautyShapeCellIdentifier = @"FUBeautyShapeCell";
     cell.defaultInMiddle = shape.defaultValueInMiddle;
     cell.defaultValue = shape.defaultValue;
     cell.currentValue = shape.currentValue;
-    // 处理低性能手机禁用特效
-    if (shape.differentiateDevicePerformance) {
-        cell.disabled = self.viewModel.performanceLevel < FUDevicePerformanceLevelHigh;
-    } else {
-        cell.disabled = NO;
-    }
+    // 判断特效设备性能等级要求是否高于当前设备性能等级
+    FUDevicePerformanceLevel level = [FURenderKit devicePerformanceLevel];
+    cell.disabled = shape.performanceLevel > level;
     cell.selected = indexPath.item == self.viewModel.selectedIndex;
     return cell;
 }
@@ -146,16 +146,15 @@ static NSString * const kFUBeautyShapeCellIdentifier = @"FUBeautyShapeCell";
 #pragma mark - Collection view delegate
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    FUBeautyShapeCell *cell = (FUBeautyShapeCell *)[collectionView cellForItemAtIndexPath:indexPath];
     FUBeautyShapeModel *shape = self.viewModel.beautyShapes[indexPath.item];
-    if (shape.differentiateDevicePerformance) {
-        if (self.viewModel.performanceLevel < FUDevicePerformanceLevelHigh) {
-            [FUTipHUD showTips:[NSString stringWithFormat:FULocalizedString(@"该功能只支持在高端机上使用"), FULocalizedString(shape.name)] dismissWithDelay:1];
-            [self.shapeCollectionView reloadData];
-            if (self.viewModel.selectedIndex >= 0) {
-                [self.shapeCollectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:self.viewModel.selectedIndex inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-            }
-            return NO;
+    if (cell.disabled && shape.performanceLevel >= FUDevicePerformanceLevelLow) {
+        [FUTipHUD showTips:[NSString stringWithFormat:FULocalizedString(@"该功能只支持在高端机上使用"), FULocalizedString(shape.name)] dismissWithDelay:1];
+        [self.shapeCollectionView reloadData];
+        if (self.viewModel.selectedIndex >= 0) {
+            [self.shapeCollectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:self.viewModel.selectedIndex inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         }
+        return NO;
     }
     return YES;
 }
@@ -243,9 +242,9 @@ static NSString * const kFUBeautyShapeCellIdentifier = @"FUBeautyShapeCell";
         
         [self.contentView addSubview:self.textLabel];
         NSLayoutConstraint *textTop = [NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1 constant:7];
-        
-        NSLayoutConstraint *textCenterX = [NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-        [self.contentView addConstraints:@[textTop, textCenterX]];
+        NSLayoutConstraint *textLeading = [NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeading multiplier:1 constant:0];
+        NSLayoutConstraint *textTrailing = [NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
+        [self.contentView addConstraints:@[textTop, textLeading, textTrailing]];
     }
     return self;
 }
@@ -266,7 +265,7 @@ static NSString * const kFUBeautyShapeCellIdentifier = @"FUBeautyShapeCell";
             changed = self.currentValue > 0.01;
         }
         if (selected) {
-            self.imageView.image = changed ? [UIImage imageNamed:[NSString stringWithFormat:@"%@-3", self.imageName]] : [UIImage imageNamed:[NSString stringWithFormat:@"%@-2", self.imageName]];
+            self.imageView.image = changed ? [UIImage imageNamed:[NSString stringWithFormat:@"%@-3", self.imageName]] :  [UIImage imageNamed:[NSString stringWithFormat:@"%@-2", self.imageName]];
             self.textLabel.textColor = [UIColor colorWithRed:94/255.f green:199/255.f blue:254/255.f alpha:1];
         } else {
             self.imageView.image = changed ? [UIImage imageNamed:[NSString stringWithFormat:@"%@-1", self.imageName]] : [UIImage imageNamed:[NSString stringWithFormat:@"%@-0", self.imageName]];
@@ -288,10 +287,11 @@ static NSString * const kFUBeautyShapeCellIdentifier = @"FUBeautyShapeCell";
         _textLabel = [[UILabel alloc] init];
         _textLabel.font = [UIFont systemFontOfSize:10];
         _textLabel.textColor = [UIColor whiteColor];
+        _textLabel.textAlignment = NSTextAlignmentCenter;
+        _textLabel.adjustsFontSizeToFitWidth = YES;
         _textLabel.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _textLabel;
 }
 
 @end
-

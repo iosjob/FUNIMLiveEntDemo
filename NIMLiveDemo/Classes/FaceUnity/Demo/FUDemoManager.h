@@ -18,9 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 开关状态
 @property (nonatomic, assign) BOOL shouldRender;
 
-/// 用于道具是否镜像
+/// 宿主工程兼容：前置摄像头/贴纸水平翻转等状态
 @property (nonatomic, assign) BOOL flipx;
-@property(nonatomic, assign) BOOL isRender;
+@property (nonatomic, assign) BOOL stickerH;
+@property (nonatomic, assign) BOOL isRender;
 
 + (instancetype)shared;
 

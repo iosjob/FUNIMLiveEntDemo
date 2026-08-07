@@ -270,6 +270,10 @@
 		E66C9D6B2264805500A1DCE4 /* NTESAudienceLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E66C9D6A2264805400A1DCE4 /* NTESAudienceLiveViewController.m */; };
 		E66C9D6F2264A1D600A1DCE4 /* NTESAudioInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E66C9D6E2264A1D600A1DCE4 /* NTESAudioInfo.m */; };
 		E6A1AD2221798886009BA0E7 /* NTESAlertSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A1AD2121798886009BA0E7 /* NTESAlertSheetView.m */; };
+		27081724FDBF4BD1BE10E33E /* FUSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 97C2647A9257446281AB127B /* FUSegmentedControl.m */; };
+		A51A775BCA4C4D07AC82F06E /* beauty_shape_low.json in Resources */ = {isa = PBXBuildFile; fileRef = E1BEBB66E5B84C37B78830F3 /* beauty_shape_low.json */; };
+		E627C8F736EA40538020944F /* beauty_skin_low.json in Resources */ = {isa = PBXBuildFile; fileRef = 51C7263E94BE4247893C45DC /* beauty_skin_low.json */; };
+		E53589D0CFB54CE284DCE09A /* beauty_skin_lessThan2.json in Resources */ = {isa = PBXBuildFile; fileRef = EAA7DF37A0B8401EA25532D9 /* beauty_skin_lessThan2.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -750,6 +754,11 @@
 		E66C9D6E2264A1D600A1DCE4 /* NTESAudioInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NTESAudioInfo.m; sourceTree = "<group>"; };
 		E6A1AD2021798886009BA0E7 /* NTESAlertSheetView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NTESAlertSheetView.h; sourceTree = "<group>"; };
 		E6A1AD2121798886009BA0E7 /* NTESAlertSheetView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NTESAlertSheetView.m; sourceTree = "<group>"; };
+		60C0EA13400B4F06A9C7F76D /* FUSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FUSegmentedControl.h; sourceTree = "<group>"; };
+		97C2647A9257446281AB127B /* FUSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FUSegmentedControl.m; sourceTree = "<group>"; };
+		E1BEBB66E5B84C37B78830F3 /* beauty_shape_low.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = beauty_shape_low.json; sourceTree = "<group>"; };
+		51C7263E94BE4247893C45DC /* beauty_skin_low.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = beauty_skin_low.json; sourceTree = "<group>"; };
+		EAA7DF37A0B8401EA25532D9 /* beauty_skin_lessThan2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = beauty_skin_lessThan2.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -846,6 +855,9 @@
 				2D84EBBC2A66875C003EEEC5 /* beauty_filter.json */,
 				2D84EBBD2A66875C003EEEC5 /* beauty_shape.json */,
 				2D84EBBE2A66875C003EEEC5 /* beauty_skin.json */,
+				EAA7DF37A0B8401EA25532D9 /* beauty_skin_lessThan2.json */,
+				51C7263E94BE4247893C45DC /* beauty_skin_low.json */,
+				E1BEBB66E5B84C37B78830F3 /* beauty_shape_low.json */,
 			);
 			path = "美颜";
 			sourceTree = "<group>";
@@ -1013,13 +1025,15 @@
 			path = FUTipHUD;
 			sourceTree = "<group>";
 		};
-		2DBBA99229AC4C1F00326546 /* FUSegmentBar */ = {
+		2DBBA99229AC4C1F00326546 /* FUSegment */ = {
 			isa = PBXGroup;
 			children = (
+				60C0EA13400B4F06A9C7F76D /* FUSegmentedControl.h */,
+				97C2647A9257446281AB127B /* FUSegmentedControl.m */,
 				2DBBA99329AC4C1F00326546 /* FUSegmentBar.h */,
 				2DBBA99429AC4C1F00326546 /* FUSegmentBar.m */,
 			);
-			path = FUSegmentBar;
+			path = FUSegment;
 			sourceTree = "<group>";
 		};
 		2DBBA99629AC4C1F00326546 /* FUSquareButton */ = {
@@ -1807,6 +1821,9 @@
 				90D9D26C1EDEBC8E002E36A7 /* 水印_3.png in Resources */,
 				2D84EBF02A66875C003EEEC5 /* qianzhihe.bundle in Resources */,
 				2D84EBE12A66875C003EEEC5 /* beauty_skin.json in Resources */,
+				E53589D0CFB54CE284DCE09A /* beauty_skin_lessThan2.json in Resources */,
+				E627C8F736EA40538020944F /* beauty_skin_low.json in Resources */,
+				A51A775BCA4C4D07AC82F06E /* beauty_shape_low.json in Resources */,
 				2D84EBF12A66875C003EEEC5 /* wumei.bundle in Resources */,
 				2D84EBE82A66875C003EEEC5 /* ziyun.bundle in Resources */,
 				2D84EBE32A66875C003EEEC5 /* oumei.bundle in Resources */,
@@ -2083,6 +2100,7 @@
 				61899E1E1C7EAEEC0028C4F8 /* UIView+Swizzling.m in Sources */,
 				61E962801C900B2C00EB64C5 /* NTESCommonTableDelegate.m in Sources */,
 				2DBBA9D829AC4C1F00326546 /* FUSegmentBar.m in Sources */,
+				27081724FDBF4BD1BE10E33E /* FUSegmentedControl.m in Sources */,
 				BD46C80E1D7678F4008D026F /* common.c in Sources */,
 				90EB73D71E94EA0800FAD5EA /* NTESAudiencePresentViewController.m in Sources */,
 				2DBBA9C529AC4C1F00326546 /* FUDemoManager.m in Sources */,
