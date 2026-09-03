@@ -66,9 +66,6 @@ static dispatch_once_t onceToken;
     self = [super init];
     if (self) {
         self.shouldRender = YES;
-        self.flipx = YES;
-        self.stickerH = YES;
-        self.isRender = YES;
     }
     return self;
 }

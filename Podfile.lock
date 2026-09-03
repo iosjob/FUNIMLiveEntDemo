@@ -7,7 +7,7 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.2.0):
     - CocoaLumberjack/Default
-  - FURenderKit_nama (9.0.1)
+  - FURenderKit_nama (9.1.2)
   - M80AttributedLabel (1.3.3)
   - Masonry (1.1.0)
   - NIMSDK (8.2.5)
@@ -21,7 +21,7 @@ PODS:
 
 DEPENDENCIES:
   - CocoaLumberjack (~> 2.2.0)
-  - FURenderKit_nama (= 9.0.1)
+  - FURenderKit_nama (= 9.1.2)
   - M80AttributedLabel (~> 1.3.1)
   - Masonry
   - NIMSDK (~> 8.2.0)
@@ -46,7 +46,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
-  FURenderKit_nama: 936d29fb42253030d3dab69a8b774ee025922f0b
+  FURenderKit_nama: 887862ceed4b6111f1cfebd8e5ceb96103093040
   M80AttributedLabel: 3bcacb2d85e6c66e32fb930aac2f04eca3974106
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   NIMSDK: 06cab2e2aed03eed830594e95ec95eadf69825de
@@ -56,6 +56,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   Toast: 0773b8fc0e97352ca6054517bec7ebdd4110029d
 
-PODFILE CHECKSUM: f00fce02a4823e6c5673ef08668557073fcaff25
+PODFILE CHECKSUM: badfb171f2c1fad811e8aef416a00be86dd6fe16
 
 COCOAPODS: 1.16.2
